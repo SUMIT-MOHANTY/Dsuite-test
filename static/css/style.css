@@ -1,0 +1,31 @@
+/* WCAG compliant focus styles */
+.btn:focus-visible,
+select:focus-visible,
+input:focus-visible {
+    outline: 3px solid #005fcc;
+    outline-offset: 2px;
+}
+
+/* Ensure minimum contrast - using Bootstrap default colors */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #ffffff;
+}
+
+/* Ensure result text has sufficient contrast */
+#result {
+    color: #212529; /* Bootstrap dark color on light background */
+}
+
+/* Additional focus improvements */
+.form-control:focus,
+.form-select:focus {
+    border-color: #005fcc;
+    box-shadow: 0 0 0 0.25rem rgba(0, 95, 204, 0.25);
+}
+
+.btn-primary:focus-visible,
+.btn-primary:active:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+}
