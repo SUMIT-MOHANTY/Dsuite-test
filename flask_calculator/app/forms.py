@@ -1,9 +1,13 @@
-# Placeholder for future form validation classes
 from flask_wtf import FlaskForm
-from wtforms import FloatField, StringField
-from wtforms.validators import DataRequired
+from wtforms import FloatField, SelectField
+from wtforms.validators import DataRequired, NumberRange
 
 class CalculatorForm(FlaskForm):
-    num1 = FloatField('First Number', validators=[DataRequired()])
-    num2 = FloatField('Second Number', validators=[DataRequired()])
-    operation = StringField('Operation', validators=[DataRequired()])
+    num1 = FloatField('First Number', validators=[DataRequired(), NumberRange()])
+    num2 = FloatField('Second Number', validators=[DataRequired(), NumberRange()])
+    operation = SelectField('Operation', choices=[
+        ('add', 'Add'),
+        ('subtract', 'Subtract'),
+        ('multiply', 'Multiply'),
+        ('divide', 'Divide')
+    ], validators=[DataRequired()])

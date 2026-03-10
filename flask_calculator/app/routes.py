@@ -1,20 +1,26 @@
 from flask import Blueprint, render_template, request, jsonify
+from app.forms import CalculatorForm
 
-bp = Blueprint('routes', __name__)
+bp = Blueprint('main', __name__)
 
-@bp.route('/')
+@bp.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    return render_template('index.html', form=CalculatorForm())
 
 @bp.route('/calculate', methods=['POST'])
 def calculate():
+    form = CalculatorForm()
+    if not form.validate_on_submit():
+        return jsonify({
+            'success': False,
+            'result': None,
+            'error': 'Invalid form submission'
+        }), 400
     try:
-        num1 = float(request.form.get('num1', 0))
-        num2 = float(request.form.get('num2', 0))
-        operation = request.form.get('operation', 'add')
-        
-        result = 0
-        
+        num1 = form.num1.data
+        num2 = form.num2.data
+        operation = form.operation.data
+
         if operation == 'add':
             result = num1 + num2
         elif operation == 'subtract':
@@ -23,14 +29,27 @@ def calculate():
             result = num1 * num2
         elif operation == 'divide':
             if num2 == 0:
-                return jsonify({"success": False, "error": "Division by zero is not allowed"}), 400
+                return jsonify({
+                    'success': False,
+                    'result': None,
+                    'error': 'Cannot divide by zero'
+                }), 400
             result = num1 / num2
         else:
-            return jsonify({"success": False, "error": "Invalid operation"}), 400
-            
-        return jsonify({"success": True, "result": result})
-    
-    except ValueError as e:
-        return jsonify({"success": False, "error": "Invalid input: please enter valid numbers"}), 400
+            return jsonify({
+                'success': False,
+                'result': None,
+                'error': 'Invalid operation'
+            }), 400
+
+        return jsonify({
+            'success': True,
+            'result': result,
+            'error': None
+        })
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({
+            'success': False,
+            'result': None,
+            'error': str(e)
+        }), 500
