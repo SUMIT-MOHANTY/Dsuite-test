@@ -1,55 +1,38 @@
-from flask import Blueprint, render_template, request, jsonify
-from app.forms import CalculatorForm
+from flask import Blueprint, request, jsonify
+from .calculator import perform_add, perform_divide
 
-bp = Blueprint('main', __name__)
+bp = Blueprint('calculator', __name__)
 
-@bp.route('/', methods=['GET'])
-def index():
-    return render_template('index.html', form=CalculatorForm())
-
-@bp.route('/calculate', methods=['POST'])
-def calculate():
-    form = CalculatorForm()
-    if not form.validate_on_submit():
-        return jsonify({
-            'success': False,
-            'result': None,
-            'error': 'Invalid form submission'
-        }), 400
+@bp.route('/add', methods=['POST'])
+def add():
+    data = request.get_json()
     try:
-        num1 = form.num1.data
-        num2 = form.num2.data
-        operation = form.operation.data
+        x = float(data['x'])
+        y = float(data['y'])
+    except (KeyError, ValueError, TypeError):
+        return jsonify({'error': 'invalid_input'}), 400
+    
+    try:
+        result = perform_add(x, y)
+    except Exception:
+        return jsonify({'error': 'invalid_input'}), 400
+    
+    return jsonify({'result': result})
 
-        if operation == 'add':
-            result = num1 + num2
-        elif operation == 'subtract':
-            result = num1 - num2
-        elif operation == 'multiply':
-            result = num1 * num2
-        elif operation == 'divide':
-            if num2 == 0:
-                return jsonify({
-                    'success': False,
-                    'result': None,
-                    'error': 'Cannot divide by zero'
-                }), 400
-            result = num1 / num2
-        else:
-            return jsonify({
-                'success': False,
-                'result': None,
-                'error': 'Invalid operation'
-            }), 400
-
-        return jsonify({
-            'success': True,
-            'result': result,
-            'error': None
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'result': None,
-            'error': str(e)
-        }), 500
+@bp.route('/divide', methods=['POST'])
+def divide():
+    data = request.get_json()
+    try:
+        x = float(data['x'])
+        y = float(data['y'])
+    except (KeyError, ValueError, TypeError):
+        return jsonify({'error': 'invalid_input'}), 400
+    
+    try:
+        result = perform_divide(x, y)
+    except ValueError as e:
+        if str(e) == "division_by_zero":
+            return jsonify({'error': 'division_by_zero'}), 400
+        return jsonify({'error': 'invalid_input'}), 400
+    
+    return jsonify({'result': result})

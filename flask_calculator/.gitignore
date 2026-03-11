@@ -1,18 +1,26 @@
-venv/
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
 env/
+venv/
 .venv/
-.env
-.coverage
+env.bak/
+venv.bak/
+.venv.bak/
+
+# Pytest
 .pytest_cache/
-htmlcov/
+.coverage
+
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+
+# OS
 .DS_Store
 Thumbs.db

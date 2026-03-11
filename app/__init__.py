@@ -1,7 +1,8 @@
 from flask import Flask
-from .routes import bp
 
-def create_app(test_config=None):
+
+def create_app():
     app = Flask(__name__)
+    from .routes import bp
     app.register_blueprint(bp)
     return app
