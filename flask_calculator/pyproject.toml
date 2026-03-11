@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flask_calculator"
+version = "2024.1.0"
+description = "A minimal JSON calculator API built with Flask"
+dependencies = ["Flask==3.0.3"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_functions = ["test_*"]
